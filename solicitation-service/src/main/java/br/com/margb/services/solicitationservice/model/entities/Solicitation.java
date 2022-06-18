@@ -15,33 +15,39 @@ public class Solicitation {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private int id;
 	
 	private Date solicitationDate;
 	
 	private String requesterName;
 	
 	@OneToMany(mappedBy = "solicitation", fetch = FetchType.LAZY)
-	private List<SolicitationItem> solicitationItem;
+	private List<SolicitationItem> solicitationItens;
 	
 	public Solicitation() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Solicitation(Long id, Date solicitationDate, String requesterName, List<SolicitationItem> solicitationItem) {
+	public Solicitation(int id, Date solicitationDate, String requesterName, List<SolicitationItem> solicitationItens) {
 		super();
 		this.id = id;
 		this.solicitationDate = solicitationDate;
 		this.requesterName = requesterName;
-		this.solicitationItem = solicitationItem;
+		this.solicitationItens = solicitationItens;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Solicitation(Date solicitationDate, String requesterName) {
+		super();
+		this.solicitationDate = solicitationDate;
+		this.requesterName = requesterName;
 	}
 
 	public Date getSolicitationDate() {
@@ -60,12 +66,12 @@ public class Solicitation {
 		this.requesterName = requesterName;
 	}
 
-	public List<SolicitationItem> getSolicitationItem() {
-		return solicitationItem;
+	public List<SolicitationItem> getSolicitationItens() {
+		return solicitationItens;
 	}
 
-	public void setSolicitationItem(List<SolicitationItem> solicitationItem) {
-		this.solicitationItem = solicitationItem;
+	public void setSolicitationItens(List<SolicitationItem> solicitationItens) {
+		this.solicitationItens = solicitationItens;
 	}	
 	
 }

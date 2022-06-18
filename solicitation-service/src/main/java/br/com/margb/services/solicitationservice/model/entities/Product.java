@@ -9,11 +9,11 @@ import javax.validation.constraints.NotBlank;
 
 
 @Entity
-public class Produto {
+public class Product {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private int id;
 	
 	@NotBlank
 	private String nome;
@@ -21,28 +21,28 @@ public class Produto {
 	@Min(0)
 	private Double preco;	
 	
-	public Produto() {
+	public Product() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Produto(Long id, String nome, Double preco) {
+	public Product(int id, String nome, Double preco) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.preco = preco;
 	}
 	
-	public Produto(String nome, Double preco) {
+	public Product(String nome, Double preco) {
 		super();		
 		this.nome = nome;
 		this.preco = preco;
 	}
 	
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 	
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	

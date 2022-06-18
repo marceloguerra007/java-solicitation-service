@@ -1,26 +1,26 @@
 package br.com.margb.services.solicitationservice.model.entities;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class SolicitationItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private int id;
 	
 	@ManyToOne
 	private Solicitation solicitation;
 	
 	private int sequence;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	private Produto produto;
+	@OneToOne
+	private Product product;
 	
 	private double quantity;
 	
@@ -30,21 +30,29 @@ public class SolicitationItem {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public SolicitationItem(Long id, int sequence, Produto produto, double quantity, String status) {
+	public SolicitationItem(Solicitation solicitation, int sequence, Product product, double quantity, String status) {
 		super();
-		this.id = id;
+		this.solicitation = solicitation;
 		this.sequence = sequence;
-		this.produto = produto;
+		this.product = product;
 		this.quantity = quantity;
 		this.status = status;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Solicitation getSolicitation() {
+		return solicitation;
+	}
+
+	public void setSolicitation(Solicitation solicitation) {
+		this.solicitation = solicitation;
 	}
 
 	public int getSequence() {
@@ -55,12 +63,12 @@ public class SolicitationItem {
 		this.sequence = sequence;
 	}
 
-	public Produto getProduto() {
-		return produto;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProduto(Produto produto) {
-		this.produto = produto;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public double getQuantity() {
