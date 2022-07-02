@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.margb.services.solicitationservice.model.Response;
 import br.com.margb.services.solicitationservice.model.entities.Product;
 import br.com.margb.services.solicitationservice.model.entities.Solicitation;
 import br.com.margb.services.solicitationservice.model.entities.SolicitationItem;
@@ -25,26 +26,51 @@ public class SolicitationService {
 	@Autowired
 	private ProductRepository productRepository;
 	
-	public Optional<Solicitation> findSolicitationById(int id){
-		return solicitationRepository.findById(id);
+	public Optional<Response> findSolicitationById(int id){
+		Response response = new Response();
+		Optional<Solicitation> solicitation = solicitationRepository.findById(id);
+		
+		solicitation
+			.ifPresentOrElse(
+				s -> {
+						response.setData(s);
+						response.setMessage("Solicitação localizada!");
+					}, 
+				()-> response.setMessage("Não foi localizada uma solicitação com o id: " + String.valueOf(id))
+			);		
+		
+		return Optional.of(response);
 	}
 
-	public Optional<Solicitation> saveSolicitation(Solicitation solicitation) {
+	public Optional<Response> saveSolicitation(Solicitation solicitation) {
+		Response response = new Response();
 		
-		List<SolicitationItem> items = solicitation.getSolicitationItens();
-		
-		solicitation = solicitationRepository.save(solicitation);		
-		
-		for (SolicitationItem solicitationItem : items) {
-			solicitationItem.setSolicitation(solicitation);
+		try {
+			List<SolicitationItem> items = solicitation.getSolicitationItens();
 			
-			Optional<Product> product = productRepository.findById(solicitationItem.getProduct().getId());
+			solicitation = solicitationRepository.save(solicitation);		
 			
-			solicitationItem.setProduct(product.get());
-		}		
-	
-		solicitationItemRepository.saveAll(items);
+			for (SolicitationItem solicitationItem : items) {
+				solicitationItem.setSolicitation(solicitation);
+				
+				Optional<Product> product = productRepository.findById(solicitationItem.getProduct().getId());
+				
+				solicitationItem.setProduct(product.get());
+			}		
+			
+			solicitationItemRepository.saveAll(items);
+			
+			//Trecho referente ao Response			
+			Optional<Solicitation> solicitationResponse = Optional.of(solicitation); //solicitationRepository.findById(solicitation.getId());
+			
+			solicitationResponse.ifPresent(
+					s -> {	response.setData(s);
+							response.setMessage("Solicitação gravada com sucesso!");
+						 });
+		} catch (Exception e) {
+			response.setMessage("Erro ao gravar a Solicitação. " + e.getMessage());
+		}
 		
-		return solicitationRepository.findById(solicitation.getId());
+		return Optional.of(response);
 	}
 }

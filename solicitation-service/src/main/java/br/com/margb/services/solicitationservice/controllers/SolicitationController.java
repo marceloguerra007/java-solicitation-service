@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.margb.services.solicitationservice.model.Response;
 import br.com.margb.services.solicitationservice.model.entities.Solicitation;
 import br.com.margb.services.solicitationservice.service.SolicitationService;
 
@@ -22,13 +23,13 @@ public class SolicitationController {
 	SolicitationService solicitationService;
 	
 	@GetMapping(path = "/{id}")
-	public Optional<Solicitation> getSolicitationById(@PathVariable int id) {
+	public Optional<Response> getSolicitationById(@PathVariable int id) {
 		
-		return solicitationService.findSolicitationById(id);
+		return solicitationService.findSolicitationById(id);		 
 	}
 	
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public @ResponseBody Optional<Solicitation> postSolicitation(@RequestBody Solicitation solicitation) {
+	public @ResponseBody Optional<Response> postSolicitation(@RequestBody Solicitation solicitation) {
 		
 		return solicitationService.saveSolicitation(solicitation);
 	}
