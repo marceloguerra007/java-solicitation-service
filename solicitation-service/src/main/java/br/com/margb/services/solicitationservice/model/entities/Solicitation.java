@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import java.util.List;;
@@ -21,13 +22,13 @@ public class Solicitation {
 	
 	private String requesterName;
 	
-	@OneToMany(mappedBy = "solicitation", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "solicitation", fetch = FetchType.LAZY)	
 	private List<SolicitationItem> solicitationItens;
 	
 	public Solicitation() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	public Solicitation(int id, Date solicitationDate, String requesterName, List<SolicitationItem> solicitationItens) {
 		super();
 		this.id = id;
@@ -36,6 +37,13 @@ public class Solicitation {
 		this.solicitationItens = solicitationItens;
 	}
 
+	public Solicitation(int id, Date solicitationDate, String requesterName) {
+		super();
+		this.id = id;
+		this.solicitationDate = solicitationDate;
+		this.requesterName = requesterName;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -65,13 +73,13 @@ public class Solicitation {
 	public void setRequesterName(String requesterName) {
 		this.requesterName = requesterName;
 	}
-
+	
 	public List<SolicitationItem> getSolicitationItens() {
 		return solicitationItens;
 	}
 
 	public void setSolicitationItens(List<SolicitationItem> solicitationItens) {
 		this.solicitationItens = solicitationItens;
-	}	
+	}
 	
 }

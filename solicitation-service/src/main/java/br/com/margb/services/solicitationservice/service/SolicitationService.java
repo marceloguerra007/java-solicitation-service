@@ -45,7 +45,6 @@ public class SolicitationService {
 	
 		solicitationItemRepository.saveAll(items);
 		
-		return null;
-		//return solicitationRepository.findById(solicitation.getId());
+		return solicitationRepository.findById(solicitation.getId());
 	}
 }

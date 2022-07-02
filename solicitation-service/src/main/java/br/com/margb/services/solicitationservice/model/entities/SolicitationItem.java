@@ -4,8 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class SolicitationItem {
@@ -15,11 +18,14 @@ public class SolicitationItem {
 	private int id;
 	
 	@ManyToOne
+	@JoinColumn(name = "solicitation_id")
+	@JsonIgnore
 	private Solicitation solicitation;
 	
 	private int sequence;
 	
 	@OneToOne
+	@JoinColumn(name = "product_id")
 	private Product product;
 	
 	private double quantity;
@@ -39,6 +45,24 @@ public class SolicitationItem {
 		this.status = status;
 	}
 
+	public SolicitationItem(int id, Solicitation solicitation, int sequence, Product product, double quantity, String status) {
+		super();
+		this.id = id;
+		this.solicitation = solicitation;
+		this.sequence = sequence;
+		this.product = product;
+		this.quantity = quantity;
+		this.status = status;
+	}
+	
+	public SolicitationItem(int id, int sequence, double quantity, String status) {
+		super();
+		this.id = id;		
+		this.sequence = sequence;		
+		this.quantity = quantity;
+		this.status = status;
+	}
+	
 	public int getId() {
 		return id;
 	}

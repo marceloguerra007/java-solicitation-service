@@ -31,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/solicitation-service/src/main/resources/application.properties
