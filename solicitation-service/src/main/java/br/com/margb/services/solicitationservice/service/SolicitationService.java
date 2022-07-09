@@ -1,9 +1,12 @@
 package br.com.margb.services.solicitationservice.service;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.margb.services.solicitationservice.model.Response;
@@ -40,6 +43,20 @@ public class SolicitationService {
 			);		
 		
 		return Optional.of(response);
+	}
+	
+	public Response findAllSolicitation(Pageable pageable){
+		Response response = new Response();
+		Page<Solicitation> solicitation = solicitationRepository.findAll(pageable);
+		
+		if (solicitation.isEmpty()) {
+			response.setMessage("Página inválida ou não há solicitações cadastradas.");
+		}else {
+			response.setData(solicitation);
+			response.setMessage("Solicitações localizadas");
+		}		
+		
+		return response;
 	}
 
 	public Optional<Response> saveSolicitation(Solicitation solicitation) {

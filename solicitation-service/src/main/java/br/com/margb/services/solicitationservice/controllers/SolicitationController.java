@@ -3,6 +3,8 @@ package br.com.margb.services.solicitationservice.controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +29,13 @@ public class SolicitationController {
 		
 		return solicitationService.findSolicitationById(id);		 
 	}
+	
+	@GetMapping(path="/page/{pageNumber}")
+	public Response getSolicitationByPage(@PathVariable int pageNumber) {
+		Pageable pageable = PageRequest.of(pageNumber, 10); 
+		
+		return solicitationService.findAllSolicitation(pageable);
+	}	
 	
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public @ResponseBody Optional<Response> postSolicitation(@RequestBody Solicitation solicitation) {
