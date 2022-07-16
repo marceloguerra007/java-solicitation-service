@@ -61,5 +61,10 @@ public class Product {
 	public void setPreco(Double preco) {
 		this.preco = preco;
 	}
+
+	public Product get() {
+		// TODO Auto-generated method stub
+		return this;
+	}
 	
 }

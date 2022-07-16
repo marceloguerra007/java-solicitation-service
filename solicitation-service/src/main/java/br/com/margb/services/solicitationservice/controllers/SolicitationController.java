@@ -38,8 +38,20 @@ public class SolicitationController {
 	}	
 	
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public @ResponseBody Optional<Response> postSolicitation(@RequestBody Solicitation solicitation) {
+	public @ResponseBody Response postSolicitation(@RequestBody Solicitation solicitation) {
 		
-		return solicitationService.saveSolicitation(solicitation);
+		Response response = new Response();
+		
+		try
+		{
+			Solicitation s = solicitationService.saveSolicitation(solicitation); 
+			response.setData(s);
+			response.setMessage("Solicitação gravada com sucesso!");
+		}
+		catch(Exception e){
+			response.setMessage(e.toString());
+		}
+		
+		return response;		
 	}
 }

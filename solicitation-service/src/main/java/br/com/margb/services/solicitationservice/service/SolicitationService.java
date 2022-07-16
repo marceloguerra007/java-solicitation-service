@@ -1,6 +1,5 @@
 package br.com.margb.services.solicitationservice.service;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import br.com.margb.services.solicitationservice.model.Response;
 import br.com.margb.services.solicitationservice.model.entities.Product;
 import br.com.margb.services.solicitationservice.model.entities.Solicitation;
@@ -18,6 +18,7 @@ import br.com.margb.services.solicitationservice.model.repositories.Solicitation
 import br.com.margb.services.solicitationservice.model.repositories.SolicitationRepository;
 
 @Service
+@Transactional
 public class SolicitationService {
 	
 	@Autowired
@@ -29,6 +30,7 @@ public class SolicitationService {
 	@Autowired
 	private ProductRepository productRepository;
 	
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public Optional<Response> findSolicitationById(int id){
 		Response response = new Response();
 		Optional<Solicitation> solicitation = solicitationRepository.findById(id);
@@ -59,35 +61,31 @@ public class SolicitationService {
 		return response;
 	}
 
-	public Optional<Response> saveSolicitation(Solicitation solicitation) {
-		Response response = new Response();
-		
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public Solicitation saveSolicitation(Solicitation solicitation) {
 		try {
 			List<SolicitationItem> items = solicitation.getSolicitationItens();
 			
-			solicitation = solicitationRepository.save(solicitation);		
+			solicitation = solicitationRepository.save(solicitation);	
 			
 			for (SolicitationItem solicitationItem : items) {
 				solicitationItem.setSolicitation(solicitation);
 				
 				Optional<Product> product = productRepository.findById(solicitationItem.getProduct().getId());
 				
-				solicitationItem.setProduct(product.get());
+				if (product.isPresent()) {
+					solicitationItem.setProduct(product.get());				
+				}else {
+					throw new Exception(String.format("Produto solicitado com id %s não está cadastrado.", solicitationItem.getProduct().getId()).toString());
+				}
 			}		
 			
 			solicitationItemRepository.saveAll(items);
 			
-			//Trecho referente ao Response			
-			Optional<Solicitation> solicitationResponse = Optional.of(solicitation); //solicitationRepository.findById(solicitation.getId());
-			
-			solicitationResponse.ifPresent(
-					s -> {	response.setData(s);
-							response.setMessage("Solicitação gravada com sucesso!");
-						 });
+			return solicitation;
 		} catch (Exception e) {
-			response.setMessage("Erro ao gravar a Solicitação. " + e.getMessage());
-		}
-		
-		return Optional.of(response);
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao gravar a Solicitação. " + e.getMessage());
+		}						
 	}
 }
